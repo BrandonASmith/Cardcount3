@@ -25,7 +25,7 @@ def render_card_html(card):
         padding:10px;
         width:60px;
         height:90px;
-        border:2px solid black;
+        border:4px solid black;
         border-radius:8px;
         background:white;
         font-weight:bold;
@@ -51,7 +51,7 @@ st.markdown("""
         color: black;
         font-weight:bold;
         font-family: Georgia, serif;
-        border: 2px solid #000;
+        border: 4px solid #000;
         font-size:16px;
         font-weight: bold;
         border-radius: 12px;
