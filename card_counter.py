@@ -14,7 +14,7 @@ def get_bet_advice(tc):
         return "Chill 🧊"
     elif .21< tc < 1.8:
         return "Squeeze 🍊"
-    else
+    else:
         return "Juicy 🧃"
 
 def render_card_html(card):
