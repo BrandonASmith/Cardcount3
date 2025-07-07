@@ -36,6 +36,7 @@ def render_card_html(card):
         font-family: Georgia, serif;
     '>
         ❤️<br>{card}
+        font-size:12px;
     </div>
     """
 
