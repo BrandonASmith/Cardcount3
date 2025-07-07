@@ -25,7 +25,7 @@ def render_card_html(card):
         padding:10px;
         width:60px;
         height:90px;
-        border:4px solid black;
+        border:4px solid red;
         border-radius:8px;
         background:white;
         font-weight:bold;
