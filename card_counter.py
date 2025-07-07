@@ -12,7 +12,7 @@ cards = list(hi_lo_values.keys())
 def get_bet_advice(tc):
     if tc <= .2:
         return "Chill 🧊"
-    elif .21< tc < 1.8:
+    elif .21 < tc < 1.8:
         return "More Juice 🍊"
     else:
         return "Extra Juicy 🧃"
@@ -21,22 +21,21 @@ def render_card_html(card):
     return f"""
     <div style='
         display:inline-block;
-        margin:4px;
-        padding:10px;
-        width:60px;
-        height:90px;
-        border:4px solid red;
-        border-radius:8px;
+        margin:2px;
+        padding:6px;
+        width:48px;
+        height:70px;
+        border:2px solid red;
+        border-radius:6px;
         background:white;
         font-weight:bold;
-        font-size:24px;
+        font-size:16px;
         color:red;
         text-align:center;
         line-height:1.2;
         font-family: Georgia, serif;
     '>
         ❤️<br>{card}
-        
     </div>
     """
 
@@ -52,20 +51,19 @@ st.markdown("""
         color: black;
         font-weight:bold;
         font-family: Georgia, serif;
-        border: 4px solid #000;
-        font-size:16px;
-        font-weight: bold;
-        border-radius: 12px;
-        height: 85px;
-        width:75px;
-        margin: 4px;
+        border: 2px solid #000;
+        font-size:12px;
+        border-radius: 6px;
+        height: 55px;
+        width:50px;
+        margin: 1px;
     }
     </style>
 """, unsafe_allow_html=True)
 
-st.title("Juice🧃Box")
+st.markdown("<h5 style='margin-bottom:4px; color:white;'>Juice🧃Box</h5>", unsafe_allow_html=True)
 
-num_decks = st.selectbox("Number of decks:", range(1, 9), index=5)
+num_decks = st.selectbox("Decks:", range(1, 9), index=5)
 
 if "count" not in st.session_state or st.session_state.get("num_decks") != num_decks:
     st.session_state.count = 0
@@ -76,26 +74,26 @@ if "count" not in st.session_state or st.session_state.get("num_decks") != num_d
     st.session_state.num_decks = num_decks
 
 col1, col2 = st.columns(2)
-if col1.button("🔄 Shoe"):
+if col1.button("🔄"):
     st.session_state.count = 0
     st.session_state.total_cards = num_decks * 52
     st.session_state.card_counts = {card: num_decks * 4 for card in cards}
     st.session_state.dealt = []
     st.session_state.history = []
 
-if col2.button("♻️ Hand"):
+if col2.button("♻️"):
     st.session_state.dealt = []
     st.session_state.history = []
 
 true_count = round(st.session_state.count / (st.session_state.total_cards / 52), 2) if st.session_state.total_cards else 0
 bet_advice = get_bet_advice(true_count)
-st.markdown(f"### Running Count: `{st.session_state.count}`")
-st.markdown(f"### True Count: `{true_count}`")
-st.markdown(f"### Bet Suggestion: **{bet_advice}**")
 
-st.markdown("### Tap a Card to Deal:")
-half = len(cards) // 2
-for row in [cards[:half], cards[half:]]:
+st.markdown(f"**RC:** `{st.session_state.count}` | **TC:** `{true_count}` | **{bet_advice}**")
+
+# Responsive card buttons in 2 rows
+half = len(cards) // 2 + 1
+rows = [cards[:half], cards[half:]]
+for row in rows:
     cols = st.columns(len(row))
     for i, card in enumerate(row):
         remaining = st.session_state.card_counts[card]
@@ -108,14 +106,14 @@ for row in [cards[:half], cards[half:]]:
                 st.session_state.history.append(st.session_state.count)
 
 if st.session_state.dealt:
-    st.markdown("### Dealt Cards:")
+    st.markdown("**Dealt Cards:**")
     html = ''.join([render_card_html(card) for card in st.session_state.dealt])
     st.markdown(html, unsafe_allow_html=True)
 
 if st.session_state.history:
-    st.markdown("### Running Count History:")
-    fig, ax = plt.subplots(figsize=(4, 1.5))
-    ax.plot(st.session_state.history, marker='o')
-    ax.set_xlabel("Cards Dealt")
-    ax.set_ylabel("Running Count")
-    st.pyplot(fig)
+    with st.expander("📈 Count Graph"):
+        fig, ax = plt.subplots(figsize=(3.5, 1.5))
+        ax.plot(st.session_state.history, marker='o')
+        ax.set_xlabel("Cards Dealt")
+        ax.set_ylabel("RC")
+        st.pyplot(fig)
