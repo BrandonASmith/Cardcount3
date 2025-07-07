@@ -49,6 +49,8 @@ st.markdown("""
     .stButton > button {
         background-color: white !important;
         color: black;
+        font-weight:bold;
+        font-family: Georgia, serif;
         border: 2px solid #000;
         font-size:16px;
         font-weight: bold;
