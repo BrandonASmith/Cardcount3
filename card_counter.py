@@ -35,7 +35,7 @@ def render_card_html(card):
         line-height:1.2;
         font-family: Georgia, serif;
     '>
-        ❤️<br>font-size:12px{card}
+        ❤️<br>{card}
         
     </div>
     """
