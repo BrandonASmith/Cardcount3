@@ -35,7 +35,7 @@ def render_card_html(card):
         line-height:1.2;
         font-family: Georgia, serif;
     '>
-        ❤️<br>{card}
+        <br>{card}
     </div>
     """
 
@@ -50,7 +50,7 @@ st.markdown("""
         background-color: white !important;
         color: black;
         border: 2px solid #000;
-        font-size:18px;
+        font-size:16px;
         font-weight: bold;
         border-radius: 12px;
         height: 85px;
