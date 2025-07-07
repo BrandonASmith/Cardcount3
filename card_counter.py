@@ -13,9 +13,9 @@ def get_bet_advice(tc):
     if tc <= .2:
         return "Chill 🧊"
     elif .21< tc < 1.8:
-        return "Squeeze 🍊"
+        return "More Juice 🍊"
     else:
-        return "Juicy 🧃"
+        return "Extra Juicy 🧃"
 
 def render_card_html(card):
     return f"""
@@ -44,13 +44,13 @@ st.set_page_config(page_title="JuiceBox", layout="centered")
 st.markdown("""
     <style>
     .stApp {
-        background-color: #0b6623;
+        background-color: #1c2d24;
     }
     .stButton > button {
         background-color: white !important;
         color: black;
         border: 2px solid #000;
-        font-size: 20px;
+        font-size:18px;
         font-weight: bold;
         border-radius: 12px;
         height: 80px;
@@ -73,14 +73,14 @@ if "count" not in st.session_state or st.session_state.get("num_decks") != num_d
     st.session_state.num_decks = num_decks
 
 col1, col2 = st.columns(2)
-if col1.button("🔄 Reset Shoe"):
+if col1.button("🔄 Shoe"):
     st.session_state.count = 0
     st.session_state.total_cards = num_decks * 52
     st.session_state.card_counts = {card: num_decks * 4 for card in cards}
     st.session_state.dealt = []
     st.session_state.history = []
 
-if col2.button("♻️ Reset Hand"):
+if col2.button("♻️ Hand"):
     st.session_state.dealt = []
     st.session_state.history = []
 
