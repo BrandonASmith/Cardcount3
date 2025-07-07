@@ -73,14 +73,14 @@ if "count" not in st.session_state or st.session_state.get("num_decks") != num_d
     st.session_state.num_decks = num_decks
 
 col1, col2 = st.columns(2)
-if col1.button("🔄 Shoe"):
+if col1.button("🔄Shoe"):
     st.session_state.count = 0
     st.session_state.total_cards = num_decks * 52
     st.session_state.card_counts = {card: num_decks * 4 for card in cards}
     st.session_state.dealt = []
     st.session_state.history = []
 
-if col2.button("♻️ Hand"):
+if col2.button("♻️Hand"):
     st.session_state.dealt = []
     st.session_state.history = []
 
