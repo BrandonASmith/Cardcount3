@@ -1,8 +1,6 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 
-st.set_page_config(page_title="JuiceBox", layout="centered")
-
 # Hi-Lo values
 hi_lo_values = {
     '2': 1, '3': 1, '4': 1, '5': 1, '6': 1,
@@ -12,21 +10,21 @@ hi_lo_values = {
 cards = list(hi_lo_values.keys())
 
 def get_bet_advice(tc):
-    if tc <= .2:
-        return "🧊 Chill"
-    elif .21 < tc < 1.8:
-        return "🍊 More Juice"
+    if tc <= 0:
+        return "Chill 🧊"
+    elif 0 < tc < 1.8:
+        return "More Juice 🍊"
     else:
-        return "🧃 Extra Juicy"
+        return "Fresh Squeezed 🧃"
 
 def render_card_html(card):
     return f"""
     <div style='
         display:inline-block;
-        margin:3px;
+        margin:2px;
         padding:6px;
-        width:45px;
-        height:65px;
+        width:40px;
+        height:60px;
         border:2px solid red;
         border-radius:6px;
         background:white;
@@ -41,7 +39,8 @@ def render_card_html(card):
     </div>
     """
 
-# Style overrides for tight mobile layout
+st.set_page_config(page_title="JuiceBox", layout="centered")
+
 st.markdown("""
     <style>
     .stApp {
@@ -51,26 +50,25 @@ st.markdown("""
     .stButton > button {
         background-color: white !important;
         color: black;
-        font-weight: bold;
+        font-family: Georgia, serif;
+        border: 2px solid #000;
         font-size: 14px;
-        border-radius: 6px;
-        height: 45px;
-        width: 55px;
-        padding: 0;
-        margin: 2px;
+        border-radius: 8px;
+        height: 40px;
+        width: 50px;
+        padding: 2px;
+        margin: 1px;
     }
-    .block-container {
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
+    .stSelectbox div[data-baseweb="select"] {
+        font-size: 14px !important;
     }
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown("<h4 style='text-align:center;'>Juice🧃Box</h4>", unsafe_allow_html=True)
+st.markdown("<h3 style='text-align: center;'>Juice🧃Box</h3>", unsafe_allow_html=True)
 
 num_decks = st.selectbox("Decks", range(1, 9), index=5)
 
-# Initialize session state
 if "count" not in st.session_state or st.session_state.get("num_decks") != num_decks:
     st.session_state.count = 0
     st.session_state.total_cards = num_decks * 52
@@ -89,40 +87,37 @@ if col1.button("Shoe"):
 
 if col2.button("Hand"):
     st.session_state.dealt = []
-    st.session_state.history = []
 
-# Show count values
 true_count = round(st.session_state.count / (st.session_state.total_cards / 52), 2) if st.session_state.total_cards else 0
 bet_advice = get_bet_advice(true_count)
 
-st.markdown(f"<div style='text-align:center;font-size:14px;'>RC: {st.session_state.count} &nbsp;&nbsp; TC: {true_count} &nbsp;&nbsp; {bet_advice}</div>", unsafe_allow_html=True)
+st.markdown(f"<div style='text-align:center; font-size:14px;'>"
+            f"<b>RC:</b> {st.session_state.count} &nbsp;&nbsp; "
+            f"<b>TC:</b> {true_count} &nbsp;&nbsp; "
+            f"{bet_advice}</div>", unsafe_allow_html=True)
 
-# Card buttons in 2 rows (7 + 6)
 rows = [cards[:7], cards[7:]]
 for row in rows:
     cols = st.columns(len(row))
     for i, card in enumerate(row):
         remaining = st.session_state.card_counts[card]
-        if cols[i].button(f"{card}\n({remaining})", key=card):
+        if cols[i].button(f"{card} ({remaining})", key=f"card_{card}"):
             if remaining > 0:
                 st.session_state.card_counts[card] -= 1
                 st.session_state.total_cards -= 1
                 st.session_state.count += hi_lo_values[card]
                 st.session_state.dealt.append(card)
                 st.session_state.history.append(st.session_state.count)
-            st.experimental_rerun()  # ensure immediate update
 
-# Display dealt cards horizontally
 if st.session_state.dealt:
-    st.markdown("<div style='text-align:center;'>Dealt:</div>", unsafe_allow_html=True)
+    st.markdown("<br><b>Dealt Cards:</b>", unsafe_allow_html=True)
     html = ''.join([render_card_html(card) for card in st.session_state.dealt])
-    st.markdown(f"<div style='text-align:center;'>{html}</div>", unsafe_allow_html=True)
+    st.markdown(html, unsafe_allow_html=True)
 
-# Optional history graph
 if st.session_state.history:
-    st.markdown("### Count Graph:")
+    st.markdown("<br><b>Running Count History:</b>", unsafe_allow_html=True)
     fig, ax = plt.subplots(figsize=(4, 1.5))
     ax.plot(st.session_state.history, marker='o')
-    ax.set_xlabel("Cards")
-    ax.set_ylabel("RC")
+    ax.set_xlabel("Cards Dealt")
+    ax.set_ylabel("Running Count")
     st.pyplot(fig)
